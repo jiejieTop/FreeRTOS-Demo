@@ -64,7 +64,6 @@
     engineered and independently SIL3 certified version for use in safety and
     mission critical applications that require provable dependability.
 
-    1 tab == 4 spaces!
 */
 
 
@@ -117,7 +116,7 @@
 #define configUSE_PORT_OPTIMISED_TASK_SELECTION	        1                       
                                                                         
 /* 置1：使能低功耗tickless模式；置0：保持系统节拍（tick）中断一直运行 */
-#define configUSE_TICKLESS_IDLE					0    
+#define configUSE_TICKLESS_IDLE					1    
 
 /*
  * 写入实际的CPU内核时钟频率，也就是CPU指令执行频率，通常称为Fclk
@@ -169,7 +168,9 @@
               FreeRTOS与内存申请有关配置选项                                               
 *****************************************************************/
 //支持动态内存申请
-#define configSUPPORT_DYNAMIC_ALLOCATION        1     
+#define configSUPPORT_DYNAMIC_ALLOCATION        1    
+//支持静态内存
+#define configSUPPORT_STATIC_ALLOCATION					1					
 //系统所有总的堆大小
 #define configTOTAL_HEAP_SIZE					((size_t)(36*1024))    
 
@@ -198,6 +199,7 @@
  * 函数必须非常短小，不能大量使用堆栈，
  * 不能调用以”FromISR" 或 "FROM_ISR”结尾的API函数
  */
+ /*xTaskIncrementTick函数是在xPortSysTickHandler中断函数中被调用的。因此，vApplicationTickHook()函数执行的时间必须很短才行*/
 #define configUSE_TICK_HOOK						0           
 
 //使用内存申请失败钩子函数
@@ -235,7 +237,7 @@
 
 
 /***********************************************************************
-                               FreeRTOS与软件定时器有关的配置选项      
+                FreeRTOS与软件定时器有关的配置选项      
 **********************************************************************/
  //启用软件定时器
 #define configUSE_TIMERS				            1                              
@@ -259,6 +261,10 @@
 #define INCLUDE_vTaskDelay				           1
 #define INCLUDE_eTaskGetState			           1
 #define INCLUDE_xTimerPendFunctionCall	     1
+#define INCLUDE_xTaskGetCurrentTaskHandle       1
+#define INCLUDE_uxTaskGetStackHighWaterMark     0
+#define INCLUDE_xTaskGetIdleTaskHandle          0
+
 
 /******************************************************************
             FreeRTOS与中断有关的配置选项                                                 
@@ -272,8 +278,9 @@
 #define configLIBRARY_LOWEST_INTERRUPT_PRIORITY			15     
 
 //系统可管理的最高中断优先级
-#define configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY	5                       
-#define configKERNEL_INTERRUPT_PRIORITY 		( configLIBRARY_LOWEST_INTERRUPT_PRIORITY << (8 - configPRIO_BITS) )
+#define configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY	5 
+
+#define configKERNEL_INTERRUPT_PRIORITY 		( configLIBRARY_LOWEST_INTERRUPT_PRIORITY << (8 - configPRIO_BITS) )	/* 240 */
 
 #define configMAX_SYSCALL_INTERRUPT_PRIORITY 	( configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY << (8 - configPRIO_BITS) )
 
