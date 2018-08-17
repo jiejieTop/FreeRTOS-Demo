@@ -115,8 +115,20 @@
  */
 #define configUSE_PORT_OPTIMISED_TASK_SELECTION	        1                       
                                                                         
-/* 置1：使能低功耗tickless模式；置0：保持系统节拍（tick）中断一直运行 */
-#define configUSE_TICKLESS_IDLE					1    
+/* 置1：使能低功耗tickless模式；置0：保持系统节拍（tick）中断一直运行
+ * 假设开启低功耗的话可能会导致下载出现问题，因为程序在睡眠中,可用以下办法解决
+ * 
+ * 下载方法：
+ *      1.将开发版正常连接好
+ *      2.按住复位按键，点击下载瞬间松开复位按键
+ *     
+ *      1.通过跳线帽将 BOOT 0 接高电平(3.3V)
+ *      2.重新上电，下载
+ *    
+ * 			1.使用FlyMcu擦除一下芯片，然后进行下载
+ *			STMISP -> 清除芯片(z)
+ */
+#define configUSE_TICKLESS_IDLE													0   
 
 /*
  * 写入实际的CPU内核时钟频率，也就是CPU指令执行频率，通常称为Fclk
@@ -170,7 +182,7 @@
 //支持动态内存申请
 #define configSUPPORT_DYNAMIC_ALLOCATION        1    
 //支持静态内存
-#define configSUPPORT_STATIC_ALLOCATION					1					
+#define configSUPPORT_STATIC_ALLOCATION					0					
 //系统所有总的堆大小
 #define configTOTAL_HEAP_SIZE					((size_t)(36*1024))    
 
